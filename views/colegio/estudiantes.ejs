@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
+    />
+    <title>Estudiantes</title>
+</head>
+<body>
+
+    <!-- Barra de Navegación -->
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #000">
+            <a class="navbar-brand" href="#">Henry Rodríguez</a>
+            <button
+                class="navbar-toggler d-lg-none"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsibleNavId"
+                aria-controls="collapsibleNavId"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            ></button>
+            
+            <div class="collapse navbar-collapse" id="collapsibleNavId">
+                <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href=".">Estudiantes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tipo_sangre">Tipo de Sangre</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <br>
+    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal" style="color: #fff">Nuevo</button>
+      
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Datos del Estudiante</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEstudiante" action="/crud_e" method="post">
+                    <div class="mb-3" style="padding: 10px;">
+                        <input class="form-control" style="margin-bottom: 10px;" type="number" id="txt_id" name="txt_id" placeholder="ID (Opcional)">
+                        <input class="form-control" style="margin-bottom: 10px;" type="text" id="txt_carne" name="txt_carne"
+                            placeholder="Carné"
+                            pattern="E\d{3}"
+                            title="Ejemplo E001">
+                        <input class="form-control" style="margin-bottom: 10px;" type="text" id="txt_nombres" name="txt_nombres" placeholder="Nombre">
+                        <input class="form-control" style="margin-bottom: 10px;" type="text" id="txt_apellidos" name="txt_apellidos" placeholder="Apellidos">
+                        <input class="form-control" style="margin-bottom: 10px;" type="text" id="txt_direccion" name="txt_direccion" placeholder="Dirección">
+                        <input class="form-control" style="margin-bottom: 10px;" type="text" id="txt_telefono" name="txt_telefono" placeholder="Teléfono"
+                            pattern="\d{8}"
+                            title="Ejemplo 25368459">
+                        <input class="form-control" style="margin-bottom: 10px;" type="email" id="txt_correo" name="txt_correo" placeholder="Correo Electrónico">
+                        <select class="form-control" style="margin-bottom: 10px;" name="txt_tiposangre" id="txt_tiposangre">
+                            <option value="" hidden>Selecciona una opción</option>
+                            <% tiposSangre.forEach ((tipoSangre)=>{ %>
+                                <option value="<%= tipoSangre.id_tipo_sangre %>"><%= tipoSangre.sangre %></option>
+                            <% }) %>
+                        </select>
+                        <input class="form-control" style="margin-bottom: 10px;" type="date" id="txt_fn" name="txt_fn">
+                        <button type="submit" class="btn btn-info" style="color: #fff" id="btn_crear" name="btn_crear" value="crear">Agregar</button>
+                        <button type="submit" class="btn btn-primary" id="btn_actualizar" name="btn_actualizar" value="actualizar">Actualizar</button>
+                        <button type="submit" class="btn btn-danger" id="btn_borrar" name="btn_borrar" value="borrar" onclick="confirmDeletion(event)">Borrar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            </div>    
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Carné</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Tipo Sangre</th>
+                    <th>Fecha Nacimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% estudiantes.forEach ((estudiante)=>{ %>
+                <tr class="">
+                    <td><%= estudiante.carne %></td>
+                    <td><%= estudiante.nombres %></td>
+                    <td><%= estudiante.apellidos %></td>
+                    <td><%= estudiante.direccion %></td>
+                    <td><%= estudiante.telefono %></td>
+                    <td><%= estudiante.correo_electronico %></td>
+                    <td><%= estudiante.sangre %></td>
+                    <td><%= estudiante.fecha_nacimiento.toISOString().split('T')[0].split('-').reverse().join('/') %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+    ></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"
+    ></script>
+
+    <script>
+        function confirmDeletion(event) {
+            var confirmation = confirm("¿Desea eliminar este elemento?");
+            var inputElementBorrar = document.getElementById('btn_borrar');
+            
+            if (!confirmation) {
+                event.preventDefault();
+                return;
+            }
+
+            document.getElementById("formEstudiante").submit();
+        }
+    </script>
+</body>
+</html>
